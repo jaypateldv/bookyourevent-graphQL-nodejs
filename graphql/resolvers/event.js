@@ -5,9 +5,9 @@ const { transformEvent } = require("./merge");
 
 module.exports = {
 
-    events: async () => {
+    events: async (args, req) => {
         try {
-            // if (!req.isAuth) throw new Error("Unauthorized user");
+            if (!req.isAuth) throw new Error("Unauthorized user");
             const events = await Event.find({});
             return events.map(event => {
                 return transformEvent(event);

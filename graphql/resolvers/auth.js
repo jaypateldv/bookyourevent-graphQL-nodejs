@@ -5,8 +5,9 @@ const { events } = require("./merge");
 
 module.exports = {
 
-    users: async () => {
+    users: async (args, req) => {
         try {
+            if (!req.isAuth) throw new Error("Unauthorized user");
             const users = await User.find({});//.populate('createdEvents');
             return users.map(user => { return { ...user._doc, password: null, createdEvents: events.bind(this, user.createdEvents) }; });
         } catch (error) {
