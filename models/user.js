@@ -1,5 +1,6 @@
 const { default: mongoose } = require("mongoose");
 const bcrypt = require('bcrypt');
+const CustomError = require("../helpers/customError");
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
@@ -21,12 +22,10 @@ const userSchema = new Schema({
 userSchema.statics.findUserByCredential = async (email, password) => {
     const user = await mongoose.model('User', userSchema).findOne({ email });
     if (!user)
-        throw new Error("Invalid email or password");
+        throw new CustomError('Invalid email or password', 400);
     const isMatch = await bcrypt.compare(password, user.password);
-
     if (!isMatch)
-        throw new Error("Invalid email or password");
-
+        throw new CustomError('Invalid email or password', 400);
     return user;
 };
 userSchema.methods.generateAuthToken = async function () {

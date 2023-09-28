@@ -1,40 +1,45 @@
 const User = require("../../models/user");
 const jwt = require('jsonwebtoken');
 const { events } = require("./merge");
+const CustomError = require("../../helpers/customError");
 
 
 module.exports = {
 
-    users: async (args, req) => {
+    async users(parent, args, contextValue, info) {
         try {
-            if (!req.isAuth) throw new Error("Unauthorized user");
-            const users = await User.find({});//.populate('createdEvents');
-            return users.map(user => { return { ...user._doc, password: null, createdEvents: events.bind(this, user.createdEvents) }; });
+            console.log("=== Users started", info.path.key);
+            const { loggedUser, req } = contextValue;
+            if (!req.isAuth) throw new CustomError('Unauthorized User', 401);
+            const user = await User.findById(req.authUser).populate('createdEvents');
+            return {
+                ...user._doc, password: null
+            };
         } catch (error) {
-            console.error(error);
             throw error;
         }
     },
 
-    createUser: async (args) => {
+    async createUser(args, { userInput }) {
         try {
-            const existUser = await User.findOne({ email: args.userInput.email });
-            if (existUser) throw new Error("Email already exist");
+            console.log("=== Creat user start", userInput);
+            const existUser = await User.findOne({ email: userInput.email });
+            if (existUser) throw new CustomError('Email already exist', 400);
             const user = new User({
-                email: args.userInput.email,
-                password: args.userInput.password
+                email: userInput.email,
+                password: userInput.password
             });
             const userData = await user.save();
             return { ...userData._doc, password: null };
-
         } catch (error) {
             console.error(error);
             throw error;
         }
     },
 
-    login: async ({ email, password }) => {
+    async login(args, { email, password }) {
         try {
+            console.log("=== Login Start");
             const user = await User.findUserByCredential(email, password);
             const token = jwt.sign({ userId: user._id, email }, process.env.JWT_SECRETE, { expiresIn: "1h" });
             return {
@@ -42,9 +47,9 @@ module.exports = {
                 ...user._doc,
                 createdEvents: events.bind(this, user.createdEvents),
             };
-        } catch (error) {
-            console.error(error);
-            throw error;
+        } catch (err) {
+            console.error(err);
+            throw err;
         }
     }
 
