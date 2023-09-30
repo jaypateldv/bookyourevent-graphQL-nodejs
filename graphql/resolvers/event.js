@@ -1,3 +1,5 @@
+const CustomError = require("../../helpers/customError");
+const { getPaginationParams } = require("../../helpers/utils");
 const Event = require("../../models/event");
 const User = require("../../models/user");
 const { transformEvent } = require("./merge");
@@ -10,18 +12,18 @@ module.exports = {
             console.log("== Events started");
             const { loggedUser, req } = contextValue;
             if (!req.isAuth) {
-                const error = new Error('Unauthorized user');
-                error.extensions = { code: 'UNAUTHORIZED' };
-                throw error;
+                throw new CustomError('Unauthorized User', 401);
             }
+            const { limit, skip, sortBy, sortOrder } = getPaginationParams(args);
             let filterObject = {};
-            for (let key in args) {
-                filterObject[key] = args[key];
-            }
-            const events = await Event.find({ ...filterObject, creator: req.authUser });
-            return events.map(event => {
-                return transformEvent(event);
-            });
+            const events = await Event.find({ ...filterObject }).sort({ [sortBy]: sortOrder }).skip(skip).limit(limit);
+            const totalDocuments = await Event.countDocuments({});
+            return {
+                events: events.map(event => {
+                    return transformEvent(event);
+                }),
+                total: totalDocuments
+            };
         } catch (error) {
             console.error(error);
             throw error;

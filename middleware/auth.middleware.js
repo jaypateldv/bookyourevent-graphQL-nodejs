@@ -1,17 +1,13 @@
 const jwt = require('jsonwebtoken');
-const CustomError = require('../helpers/customError');
 const user = require('../models/user');
-module.exports = async ({req, res}) => {
+module.exports = async ({ req, res, a }) => {
     try {
-        console.log("=== Middleware started:", new Date().toLocaleString()),req;
-        // if (req.body.operationName == 'login' || req.body.operationName == 'createUser')
-        //     return true;
+        console.log("=== Middleware started:", new Date().toLocaleString(), req.headers['authorization']);
         const token = req.headers['authorization'];
         if (!token || token === '') {
             req.isAuth = false;
             console.log("=== User unauthorized 1");
-            throw new CustomError('Unauthorised User', 401);
-            // return next();
+            return { req };
         }
         const decodedToken = jwt.verify(token, process.env.JWT_SECRETE);
         const loggedUSer = await user.findById(decodedToken.userId);
@@ -20,17 +16,15 @@ module.exports = async ({req, res}) => {
             req.isAuth = true;
             console.log("=== User authorized");
             return { loggedUSer, req };
-            // next();
         } else {
             this.isAuth = false;
             console.log("=== User unauthorized 2");
-            throw new CustomError('Unauthorised User', 401);
-            // next();
+            return { req };
         }
     } catch (error) {
         console.error(error);
         console.log("=== User unauthorized");
-        throw error;
-        // next();
+        req.isAuth = false;
+        return { req };
     }
 };

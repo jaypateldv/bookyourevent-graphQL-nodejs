@@ -108,8 +108,13 @@ input UserInput {
     password: String!
 }
 
+type EventsRes {
+    events:[Event!]!
+    total:Int
+}
+
 type Query {
-    events(_id:ID): [Event!]!
+    events(_id:ID,page:Int,limit:Int,sortBy:String,sortOrder:String): EventsRes!
     allEvents: [Event!]!
     users: User!
     bookings(_id:ID): [Booking!]!
@@ -124,7 +129,3 @@ type Mutation {
 }
 
 `;
-// schema{
-//     query: RootQuery
-//     mutation: RootMutation
-// }

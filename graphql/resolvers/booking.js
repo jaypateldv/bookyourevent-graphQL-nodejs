@@ -7,8 +7,8 @@ module.exports = {
 
     async bookings(parent, args, contextValue, info) {
         try {
-            console.log("=== Users started", info.path.key);
             const { loggedUser, req } = contextValue;
+            console.log("=== Users started", req.isAuth);
             if (!req.isAuth)
                 throw new GraphQLError("Unauthorised user", { extensions: { code: '401' } });
             let filterObject = {};
