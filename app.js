@@ -8,6 +8,7 @@ const { ApolloServerPluginDrainHttpServer } = require('@apollo/server/plugin/dra
 const { typedDefs } = require("./graphql/schema/index");
 const auth = require("./middleware/auth.middleware");
 const graphQlResolver = require("./graphql/resolvers/index");
+const HasRoleDirective = require("./graphql/directives/roleDirective");
 
 const app = express();
 const httpServer = http.createServer(app);
@@ -15,6 +16,9 @@ const server = new ApolloServer({
     typeDefs: typedDefs,
     resolvers: graphQlResolver,
     plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
+    schemaDirectives: {
+        hasRole: HasRoleDirective,
+    },
 });
 
 (async () => {

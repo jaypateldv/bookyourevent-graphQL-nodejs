@@ -89,6 +89,7 @@ type User {
     password:String
     createdEvents:[Event]
     token: String
+    sensitiveInformation: String @hasRole(role: "ADMIN")
 }
 
 type AuthData{
@@ -127,5 +128,7 @@ type Mutation {
     bookEvent(eventId: ID!): Booking!
     cancelBooking(bookingId: ID!): Event!
 }
+
+directive @hasRole(role: String!) on FIELD_DEFINITION
 
 `;
