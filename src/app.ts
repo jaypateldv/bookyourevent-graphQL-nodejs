@@ -9,7 +9,7 @@ import { auth } from "./middleware/auth.middleware";
 import { typedDefs } from "./graphql/schema/index";
 import { resolver as graphQlResolver } from "./graphql/resolvers/index";
 import { DB } from "./helpers/mongoose";
-// import AuthDirective from "./src/graphql/directives/roleDirective";
+import { baseSchema } from "./graphql/directives";
 
 const app = express();
 const httpServer = http.createServer(app);
@@ -17,13 +17,10 @@ const httpServer = http.createServer(app);
 const schema = makeExecutableSchema({
   typeDefs: typedDefs,
   resolvers: graphQlResolver,
-  //   schemaExtensions: {
-  // auth: AuthDirective,
-  //   },
 });
 
 const server = new ApolloServer({
-  schema,
+  schema: baseSchema,
   plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
   formatError: (error) => {
     return {
@@ -45,9 +42,6 @@ const server = new ApolloServer({
       expressMiddleware(server, { context: auth })
     );
     console.log("## DB connected");
-    // await new Promise((resolve) =>
-    //   httpServer.listen({ port: process.env.PORT }, resolve())
-    // );
     httpServer.listen({ port: process.env.PORT }, () => {
       console.log(`🚀 Server ready at http://localhost:${process.env.PORT}/`);
     });

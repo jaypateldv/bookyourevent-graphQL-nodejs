@@ -36,6 +36,22 @@ async function users(args: any, value: any, contextValue: ContextValue) {
     throw error;
   }
 }
+async function allUsers(args: any, value: any, contextValue: ContextValue) {
+  try {
+    const { loggedUser, req } = contextValue;
+    console.log("=== allUsers started", req.isAuth);
+    if (!req.isAuth) throw new CustomError("Unauthorized User", 401);
+    const users: any[] = await User.find({}).populate("createdEvents");
+    return users.map((user) => {
+      return {
+        ...user._doc,
+        password: null,
+      };
+    });
+  } catch (error) {
+    throw error;
+  }
+}
 
 const login = async (args: any, { email, password }: LoginArgs) => {
   try {
@@ -74,4 +90,4 @@ async function createUser(args: any, { userInput }: CreateUserArgs) {
   }
 }
 
-export { users, login, createUser };
+export { users, login, createUser, allUsers };

@@ -3,9 +3,14 @@ import * as bcrypt from "bcrypt";
 import * as jwt from "jsonwebtoken";
 import { CustomError } from "../helpers/customError";
 
+enum roleType {
+  Admin,
+  User,
+}
 export interface UserDocument extends Document {
   email: string;
   password: string;
+  role: String;
   createdEvents: Schema.Types.ObjectId[];
 }
 
@@ -29,6 +34,11 @@ const userSchema = new Schema<UserDocument, UserModel>({
       ref: "Event",
     },
   ],
+  role: {
+    type: String,
+    enum: roleType,
+    required: true,
+  },
 });
 
 userSchema.statics.findUserByCredential = async function (
