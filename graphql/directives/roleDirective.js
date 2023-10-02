@@ -1,19 +1,21 @@
-const { SchemaDirectiveVisitor } = require('@apollo/server');
-class HasRoleDirective extends SchemaDirectiveVisitor {
-    visitFieldDefinition(field) {
-        const { resolve = defaultFieldResolver } = field;
-        const { role } = this.args;
+// const { schema } = require('@graphql-tools/schema');
+// const { makeExecutableSchema, SchemaDirectiveVisitor } = require('@graphql-tools/utils');
 
-        field.resolve = async function (...args) {
-            const context = args[2];
-            const user = context.user; // Assuming you have a user object in the context
+// class AuthDirective extends getDirectiveInExtensions {
+//     visitFieldDefinition(field) {
+//         console.log(" ### AuthDirective");
+//         const { resolve = defaultFieldResolver } = field;
+//         const { roles } = this.args;
 
-            if (!user || !user.roles || !user.roles.includes(role)) {
-                throw new Error(`You don't have the necessary role: ${role}`);
-            }
+//         field.resolve = async function (source, args, context, info) {
+//             // Check if the user has the required roles
+//             const userRoles = context.userRoles || [];
+//             if (!userRoles.some(role => roles.includes(role))) {
+//                 throw new Error('Access denied');
+//             }
 
-            return resolve.apply(this, args);
-        };
-    }
-}
-module.exports = HasRoleDirective;
+//             return resolve.call(this, source, args, context, info);
+//         };
+//     }
+// }
+// module.exports = AuthDirective;

@@ -10,12 +10,12 @@ module.exports = async ({ req, res, a }) => {
             return { req };
         }
         const decodedToken = jwt.verify(token, process.env.JWT_SECRETE);
-        const loggedUSer = await user.findById(decodedToken.userId);
-        if (loggedUSer) {
+        const loggedUser = await user.findById(decodedToken.userId);
+        if (loggedUser) {
             req.authUser = decodedToken.userId;
             req.isAuth = true;
             console.log("=== User authorized");
-            return { loggedUSer, req };
+            return { loggedUser, req };
         } else {
             this.isAuth = false;
             console.log("=== User unauthorized 2");
