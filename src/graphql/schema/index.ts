@@ -1,6 +1,7 @@
-module.exports.typedDefs = `#graphql
+export const typedDefs = `#graphql
 
-directive @auth(roles: [String]) on FIELD_DEFINITION
+directive @authenticated on FIELD_DEFINITION
+directive @requiredRole(roles:[String]) on FIELD_DEFINITION
 
 type Booking {
     _id: ID!
@@ -22,9 +23,10 @@ type Event {
 
 type User {
     _id: ID!
-    email: String! @deprecated(reason: "Testing deprecated directive")
-    password:String @auth(roles: ["admin", "manager"])
+    email: String!
+    password:String
     createdEvents:[Event]
+    role: String
     token: String
     sensitiveInformation: String
 }
@@ -44,6 +46,7 @@ input EventInput {
 input UserInput {
     email: String!
     password: String!
+    role:String!
 }
 
 type EventsRes {
@@ -56,19 +59,21 @@ type DeleteEventRes {
 }
 
 type Query {
-    events(_id:ID,page:Int,limit:Int,sortBy:String,sortOrder:String): EventsRes!
-    allEvents: [Event!]!
-    users: User!
-    bookings(_id:ID): [Booking!]!
+    events(_id:ID,page:Int,limit:Int,sortBy:String,sortOrder:String): EventsRes! @authenticated
+    allEvents: [Event!]! @authenticated
+    users: User! @authenticated 
+    bookings(_id:ID): [Booking!]! @authenticated
     login(email: String!, password: String!): User!
-    deleteEvent(eventId:String!) : DeleteEventRes!
+    deleteEvent(eventId:String!) : DeleteEventRes! @authenticated
+
+    allUsers: [User!]! @requiredRole(roles: ["Admin"])
 }
 
 type Mutation {
-    createEvent(eventInput: EventInput): Event
+    createEvent(eventInput: EventInput): Event @authenticated
     createUser(userInput: UserInput): User
-    bookEvent(eventId: ID!): Booking!
-    cancelBooking(bookingId: ID!): Event!
+    bookEvent(eventId: ID!): Booking! @authenticated
+    cancelBooking(bookingId: ID!): Event! @authenticated
 }
 
 directive @hasRole(role: String!) on FIELD_DEFINITION
