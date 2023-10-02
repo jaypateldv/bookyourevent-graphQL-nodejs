@@ -66,14 +66,14 @@ userSchema.methods.generateAuthToken = async function (): Promise<string> {
   return token;
 };
 
-userSchema.methods.toJSON = function (): Record<string, unknown> {
-  const user = this as UserDocument;
-  const userObject = user.toObject();
+// userSchema.methods.toJSON = function (): Record<string, unknown> {
+//   const user = this as UserDocument;
+//   const userObject = user.toObject();
 
-  delete userObject.password;
+//   delete userObject.password;
 
-  return userObject;
-};
+//   return userObject;
+// };
 
 userSchema.pre("save", async function (next) {
   const user = this as UserDocument;

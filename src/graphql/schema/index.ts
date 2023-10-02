@@ -2,6 +2,8 @@ export const typedDefs = `#graphql
 
 directive @authenticated on FIELD_DEFINITION
 directive @requiredRole(roles:[String]) on FIELD_DEFINITION
+directive @showPassword(requiredRoles:[String]) on FIELD_DEFINITION
+
 
 type Booking {
     _id: ID!
@@ -24,7 +26,7 @@ type Event {
 type User {
     _id: ID!
     email: String!
-    password:String
+    password:String @showPassword(requiredRoles:["Admin"])
     createdEvents:[Event]
     role: String
     token: String

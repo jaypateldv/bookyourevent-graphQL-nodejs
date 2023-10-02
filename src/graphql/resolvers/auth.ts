@@ -30,7 +30,6 @@ async function users(args: any, value: any, contextValue: ContextValue) {
     );
     return {
       ...user?._doc,
-      password: null,
     };
   } catch (error) {
     throw error;
@@ -45,7 +44,6 @@ async function allUsers(args: any, value: any, contextValue: ContextValue) {
     return users.map((user) => {
       return {
         ...user._doc,
-        password: null,
       };
     });
   } catch (error) {
@@ -83,7 +81,7 @@ async function createUser(args: any, { userInput }: CreateUserArgs) {
       password: userInput.password,
     });
     const userData: any = await user.save();
-    return { ...userData?._doc, password: null };
+    return { ...userData?._doc };
   } catch (error) {
     console.error(error);
     throw error;
