@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon app.js"
+    "dev": "nodemon src/app.ts",
+    "ts-dev": "ts-node src/app.ts"
   },
   "keywords": [],
   "author": "",
@@ -22,9 +23,13 @@
     "express-graphql": "^0.12.0",
     "graphql": "^16.8.1",
     "jsonwebtoken": "^9.0.0",
-    "mongoose": "^6.10.0"
+    "mongoose": "^6.10.0",
+    "typescript": "^5.2.2"
   },
   "devDependencies": {
-    "nodemon": "^2.0.20"
+    "@types/bcrypt": "^5.0.0",
+    "@types/jsonwebtoken": "^9.0.3",
+    "nodemon": "^2.0.20",
+    "ts-node": "^10.9.1"
   }
 }

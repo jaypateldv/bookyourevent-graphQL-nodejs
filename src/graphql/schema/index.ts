@@ -1,4 +1,4 @@
-module.exports.typedDefs = `#graphql
+export const typedDefs = `#graphql
 
 directive @auth(roles: [String]) on FIELD_DEFINITION
 
