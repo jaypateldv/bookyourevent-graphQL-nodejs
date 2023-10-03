@@ -11,6 +11,7 @@ export interface UserDocument extends Document {
   email: string;
   password: string;
   role: String;
+  profileKey: String;
   createdEvents: Schema.Types.ObjectId[];
 }
 
@@ -37,6 +38,10 @@ const userSchema = new Schema<UserDocument, UserModel>({
   role: {
     type: String,
     enum: roleType,
+    required: true,
+  },
+  profileKey: {
+    type: String,
     required: true,
   },
 });

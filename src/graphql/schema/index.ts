@@ -1,6 +1,7 @@
 export const typedDefs = `#graphql
 
 directive @authenticated on FIELD_DEFINITION
+directive @getPresignedUrl on FIELD_DEFINITION
 directive @requiredRole(roles:[String]) on FIELD_DEFINITION
 directive @showPassword(requiredRoles:[String]) on FIELD_DEFINITION
 
@@ -30,6 +31,7 @@ type User {
     createdEvents:[Event]
     role: String
     token: String
+    profileKey:String! @getPresignedUrl
     sensitiveInformation: String
 }
 
@@ -49,6 +51,7 @@ input UserInput {
     email: String!
     password: String!
     role:String!
+    profileKey:String!
 }
 
 type EventsRes {
