@@ -73,13 +73,21 @@ type Query {
 
     allUsers: [User!]! @requiredRole(roles: ["Admin"])
 }
+scalar Upload
+
+type uploadProfilePhotoRes{
+    profileKey: String! @getPresignedUrl
+}
 
 type Mutation {
     createEvent(eventInput: EventInput): Event @authenticated
     createUser(userInput: UserInput): User
     bookEvent(eventId: ID!): Booking! @authenticated
     cancelBooking(bookingId: ID!): Event! @authenticated
+
+    uploadProfilePhoto(file:Upload!) : uploadProfilePhotoRes
 }
+
 
 directive @hasRole(role: String!) on FIELD_DEFINITION
 

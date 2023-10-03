@@ -1,13 +1,17 @@
 {
-    "compilerOptions": {
-      "target": "es6",
-      "module": "commonjs",
-      "outDir": "./dist",
-      "rootDir": "./src",
-      "strict": true,
-      "esModuleInterop": true,
-      "resolveJsonModule": true,
-      "moduleResolution": "node"
+  "compilerOptions": {
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "outDir": "./dist",
+    "strictNullChecks": false,
+    "module": "commonjs", // or "esnext"
+    "target": "esnext",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "types": ["module"]
     },
     "include": ["src/**/*.ts"],
     "exclude": ["node_modules"]

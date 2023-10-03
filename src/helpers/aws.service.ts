@@ -18,3 +18,16 @@ export function getFilePreSignedUrl(Key: string) {
   };
   return S3.getSignedUrl("getObject", params);
 }
+
+export async function uploadProfilePhotoToS3(file: any, key: string) {
+  const { createReadStream, filename, mimetype } = file.file;
+  const fileParts = filename.split(".");
+  const stream = createReadStream();
+  const params = {
+    Bucket: awsConfig.bucketName!,
+    Key: `profilePhoto/${key}-${filename}`,
+    Body: stream,
+    ContentType: fileParts[fileParts.length - 1],
+  };
+  return S3.upload(params).promise();
+}
