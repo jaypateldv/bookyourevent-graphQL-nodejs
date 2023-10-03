@@ -11,6 +11,7 @@ export interface UserDocument extends Document {
   email: string;
   password: string;
   role: String;
+  profileKey: String;
   createdEvents: Schema.Types.ObjectId[];
 }
 
@@ -37,6 +38,10 @@ const userSchema = new Schema<UserDocument, UserModel>({
   role: {
     type: String,
     enum: roleType,
+    required: true,
+  },
+  profileKey: {
+    type: String,
     required: true,
   },
 });
@@ -66,14 +71,14 @@ userSchema.methods.generateAuthToken = async function (): Promise<string> {
   return token;
 };
 
-userSchema.methods.toJSON = function (): Record<string, unknown> {
-  const user = this as UserDocument;
-  const userObject = user.toObject();
+// userSchema.methods.toJSON = function (): Record<string, unknown> {
+//   const user = this as UserDocument;
+//   const userObject = user.toObject();
 
-  delete userObject.password;
+//   delete userObject.password;
 
-  return userObject;
-};
+//   return userObject;
+// };
 
 userSchema.pre("save", async function (next) {
   const user = this as UserDocument;

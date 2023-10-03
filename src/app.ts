@@ -10,10 +10,9 @@ import { typedDefs } from "./graphql/schema/index";
 import { resolver as graphQlResolver } from "./graphql/resolvers/index";
 import { DB } from "./helpers/mongoose";
 import { baseSchema } from "./graphql/directives";
-
+import graphqlUploadExpress from "graphql-upload/public/graphqlUploadExpress.js";
 const app = express();
 const httpServer = http.createServer(app);
-
 const schema = makeExecutableSchema({
   typeDefs: typedDefs,
   resolvers: graphQlResolver,
@@ -30,6 +29,7 @@ const server = new ApolloServer({
       path: error.path,
     };
   },
+  csrfPrevention: false,
 });
 
 (async () => {
@@ -39,6 +39,7 @@ const server = new ApolloServer({
     app.use(
       cors(),
       express.json(),
+      graphqlUploadExpress({ maxFileSize: 1000000, maxFiles: 10 }),
       expressMiddleware(server, { context: auth })
     );
     console.log("## DB connected");

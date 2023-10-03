@@ -1,9 +1,0 @@
-{
-    "env":{
-        "MONGO_USER":"jay",
-        "MONGO_PASSWORD":"",
-        "MONGO_URL":"mongodb://localhost:27017/event_booking",
-        "PORT":3000,
-        "JWT_SECRETE":"youcannothackthistoken"
-    }
-}

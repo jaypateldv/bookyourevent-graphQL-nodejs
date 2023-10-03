@@ -21,7 +21,7 @@ import { User } from "../../models/user";
 
 const transformBooking = (booking: any) => {
   return {
-    ...booking["._doc"],
+    ...booking._doc,
     user: user.bind(this, booking.user as string),
     event: event.bind(this, booking.event as string),
     createdAt: dateToString(booking.createdAt),

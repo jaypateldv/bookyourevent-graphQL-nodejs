@@ -1,7 +1,10 @@
 export const typedDefs = `#graphql
 
 directive @authenticated on FIELD_DEFINITION
+directive @getPresignedUrl on FIELD_DEFINITION
 directive @requiredRole(roles:[String]) on FIELD_DEFINITION
+directive @showPassword(requiredRoles:[String]) on FIELD_DEFINITION
+
 
 type Booking {
     _id: ID!
@@ -24,10 +27,11 @@ type Event {
 type User {
     _id: ID!
     email: String!
-    password:String
+    password:String @showPassword(requiredRoles:["Admin"])
     createdEvents:[Event]
     role: String
     token: String
+    profileKey:String! @getPresignedUrl
     sensitiveInformation: String
 }
 
@@ -47,6 +51,7 @@ input UserInput {
     email: String!
     password: String!
     role:String!
+    profileKey:String!
 }
 
 type EventsRes {
@@ -68,13 +73,21 @@ type Query {
 
     allUsers: [User!]! @requiredRole(roles: ["Admin"])
 }
+scalar Upload
+
+type uploadProfilePhotoRes{
+    profileKey: String! @getPresignedUrl
+}
 
 type Mutation {
     createEvent(eventInput: EventInput): Event @authenticated
     createUser(userInput: UserInput): User
     bookEvent(eventId: ID!): Booking! @authenticated
     cancelBooking(bookingId: ID!): Event! @authenticated
+
+    uploadProfilePhoto(file:Upload!) : uploadProfilePhotoRes
 }
+
 
 directive @hasRole(role: String!) on FIELD_DEFINITION
 
