@@ -12,6 +12,8 @@ interface CreateUserArgs {
   userInput: {
     email: string;
     password: string;
+    profileKey: String;
+    role: String;
   };
 }
 
@@ -79,6 +81,8 @@ async function createUser(args: any, { userInput }: CreateUserArgs) {
     const user = new User({
       email: userInput.email,
       password: userInput.password,
+      profileKey: userInput.profileKey,
+      role: userInput.role,
     });
     const userData: any = await user.save();
     return { ...userData?._doc };
