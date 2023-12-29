@@ -29,7 +29,7 @@ type User {
     email: String!
     password:String @showPassword(requiredRoles:["Admin"])
     createdEvents:[Event]
-    role: String
+    role: UserRole
     token: String
     profileKey:String! @getPresignedUrl
     sensitiveInformation: String
@@ -50,7 +50,7 @@ input EventInput {
 input UserInput {
     email: String!
     password: String!
-    role:String!
+    role: UserRole!
     profileKey:String!
 }
 
@@ -74,7 +74,7 @@ type Query {
     allUsers: [User!]! @requiredRole(roles: ["Admin"])
 }
 scalar Upload
-
+scalar UserRole
 type uploadProfilePhotoRes{
     profileKey: String! @getPresignedUrl
 }
